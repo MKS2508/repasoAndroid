@@ -211,7 +211,7 @@ Las acciones mas comunes son:
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-# Botones
+# Botones :play_or_pause_button:
 
 > Estos atributos y métodos son aplicables a los elementos **Button**, **ImageButton**, <u>**FloatingActionButton**</u> y a cualquier **View**, como por ejemplo, una **ImageView**.
 
@@ -307,7 +307,7 @@ public void nombreMetodo(View view){
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-# Input controls
+# Input Controls
 
 #### `Text Input`
 
@@ -403,35 +403,79 @@ public void nombreMetodo(View view){
 > 
  #### `Spinner`
 
-> >Extiende de la clase **ImageButton**.
+> >#### Spinner
 > >
-> >Se usa `onClickListener`() en el método `onCreate`().
+> >Proporciona una forma rápida de seleccionar un valor de entre una lista, de, normalmente mas de tres elementos, ya que se muestra en un menú desplegable
+> >
+> >1. Crear elemento Spinner en Layout.
+> >
+> >2. Crear array de valores en el Layout.
+> >
+> >3. Rellenar el Spinner con los valores en el método `onCreate`().
+> >
+> >    a) Crea Adapter que tome los valores del Array y cree una View por cada elemento del Array con el método `createFromResource`().
+> >
+> >    b) Indica al Adapter en que layout queremos que añada los elementos con el método			       `setDropDownViewResource`().
+> >
+> >4. Asociar el Adapter al Spinner en el método `onCreate`().   
+> >
+> >5. Indicar acción cuando se pulse en un elemento desplegado, implementando la interfaz `OnItemSelectedListener` y asociando el método del Listener en el `onCreate`().
+> >
+> >6. Implementar método `onItemSelected`() con el código que queremos ejecutar cuando se pulse un elemento, podemos usar el método para acceder al elemento seleccionado a partir de su posición del array.
 >
 > MainActivity.xml:
 >
 > ```xml
-> <android.support.design.widget.FloatingActionButton
->         android:id="@+id/fab"
->         android:layout_width="wrap_content"
->         android:layout_height="wrap_content"
->         android:layout_gravity="bottom|end"
->         android:layout_margin="@dimen/fab_margin"
->         android:src="@drawable/ic_fab_chat_button_white" />
+> <Spinner 
+>     android:id="@+id/labelSpinner"
+>     android:layout_width="wrap_content"
+>     android:layout_height="wrap_content"
+>     android:layout_marginStart="16dp"/>
 > ```
 >
-> MainActivity.java:
+> strings.xml:
+>
+> ```xml
+> <string-array name="labels_array">
+>     <item>Home</item>
+>     <item>Work</item>
+>     <item>Mobile</item>
+>     <item>Other</item>
+> </string-array>
+> ```
+> MainActivity.java(crear spinner): 
 >
 > ```java
-> FloatingActionButton fab = findViewById(R.id.fab);       
-> fab.setOnClickListener(new View.OnClickListener() {
-> 	public void onClick(View view) {
-> 		Intent intent = new Intent(MainActivity.this,OrderActivity.class);
->         	//funcionalidad increiblemente complicada
->             }
->         });
+> ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(MainActivity.this, R.array.labels_array, android.R.layout.simple_spinner_item); //paso 3a
+> adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);//3b
+> 
+> 
+> Spinner spinner = findViewById(R.id.label_spinner);//4
+> if(spinner != null){
+>     spinner.setAdapter(adapter);
+> }
+> ```
+>
+> MainActivity.java(onClick): 
+>
+> ```java
+> public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+>     
+>     Spinner spinner = findViewById(R.id.label_spinner);
+>     if(spinner != null){
+>     spinner.setOnItemSelectedListener(this);
+> 	}
+> }
+> ```
+>
+>
+> ```java
+> public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+>     String spinner_item = adapterView.getItemAtPosition(i).toString();
+>     displayToast(spinner_item);
+> }
 > ```
 > 
-
 #### `Toggle Button y Switches`
 
 > >Extiende de la clase **ImageButton**.
